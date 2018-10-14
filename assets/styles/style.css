@@ -8,8 +8,15 @@ body{
 
 .container{
     background-color: rgba(255,255,255,.8);
+    padding: 10px 40px;
 }
 
 .slot{
     padding: 10px 0;
+    border-radius: 20px;
+}
+
+.slot:hover{
+    background-color: rgba(99, 99, 99, 0.7);
+    color: white;
 }
