@@ -27,6 +27,7 @@ let triviaGame = {
         console.log(`correct: ${currentQuestion.answer}`);
         console.log(`incorrect:${currentQuestion.wrong}`);
         $(`#slot${correctAnswerSlot}`).text(`${currentQuestion.answer}`);
+        $(`#slot${correctAnswerSlot}`).attr(`correct`,true);
 
         // for each wrong answer loop through question slots, test is text is blank place wrong answers only in blank slots
         for (let i = 0; i < currentQuestion.wrong.length; i++) { //outer loop for wrong answers
@@ -47,6 +48,10 @@ let triviaGame = {
 
     startRound: function () {
         triviaGame.serveQuestion();
+        $(`.slot`).click(function(){
+            console.log(this);
+        })
+        
     }
 
 }
