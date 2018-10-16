@@ -66,6 +66,18 @@ let triviaGame = {
     },
 
     startRound: function () {
+        /*
+        Notes for implementing timer-
+
+        startRound initiates
+        serveQuestion runs
+        timer starts, value stored in variables
+        while(timerVariable > 0){
+            click event for choosing answer
+        }
+        time is out - display message
+        */
+
         questionDisplay.show();
         answerDisplay.show();
         messageDisplay.hide();
