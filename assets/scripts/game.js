@@ -25,24 +25,27 @@ let triviaGame = {
     makeRandom: function () {
         //console.log(randomNumbers);
         let randomIndex = Math.floor(Math.random() * this.data.length);
+        console.log(`randomIndex: ${randomIndex}`);
         return randomIndex;
     },
 
     makeQuestion: function () {
         let random = this.makeRandom();
-
+        let question,correctAnswer,wrongAnswers;
         // pulls an entry from the data array so it cannot be chosen again
         let chosenData = this.data.splice(random, 1);
 
-        let question = chosenData[0].question;
-        let correctAnswer = chosenData[0].correct_answer;
-        let wrongAnswers = chosenData[0].incorrect_answers;
+         question = chosenData[0].question;
+         console.log(`chosen question: ${question}`)
+         correctAnswer = chosenData[0].correct_answer;
+         wrongAnswers = chosenData[0].incorrect_answers;
 
         return { queston: question, answer: correctAnswer, wrong: wrongAnswers };
     },
 
     serveQuestion: function () {
         let currentQuestion = this.makeQuestion();
+        console.log(`being served: ${currentQuestion.queston}`)
         questionDisplay.html(`<p>${currentQuestion.queston}</p>`);
         // make random number between 0 and 3, store in variable correctAnswerSlot
         let correctAnswerSlot = Math.floor(Math.random() * 4 + 1);
@@ -90,6 +93,7 @@ let triviaGame = {
     checkAnswer: function (event) {
         console.log(`checking answer...`);
         if (event.target.hasAttribute(`correct`) === true) {
+            window.clearInterval(intervalId);
             console.log(`number guessed right:${numberCorrect}`);
             if (triviaGame.data.length === 0) {
                 //player wins game
@@ -114,13 +118,15 @@ let triviaGame = {
         // window.setTimeout(triviaGame.startRound, 2000);
     },
 
-    displayMessage: function (gameResult) {
+    displayMessage: function (roundResult) {
         questionDisplay.hide();
         answerDisplay.hide();
         messageDisplay.show();
-        if (gameResult === "round-win") {
+        if (roundResult === "round-win") {
+            console.log(`round-win display message executed`)
             messageDisplay.html(`<h1>Correct!</h1>`);
-        } else if (gameResult === "game-over") {
+        } else if (roundResult === "game-over") {
+            console.log(`gameover display message executed`)
             messageDisplay.html(
                 `
                 <h1>Game Over</h1>
@@ -129,11 +135,13 @@ let triviaGame = {
                 <p>Thanks for playing!</p>
                 <button class="btn btn-info">Reset</button>
                 `);
-                $(`.btn-info`).click(triviaGame.startRound());
-        } else if (gameResult === "time-over") {
+            $(`.btn-info`).click(triviaGame.startRound());
+        } else if (roundResult === "time-over") {
+            console.log(`time-over display message executed`);
             messageDisplay.html(`<h1>Time over</h1>`);
             window.setTimeout(triviaGame.startRound, 1000);
         } else {
+            console.log(`incorrect answer display message executed`);
             messageDisplay.html(`<h1>Wrong!</h1>`);
         }
 
@@ -164,9 +172,9 @@ let triviaGame = {
 
 
 //initiate game by calling triviaGame object
-$(`document`).ready(function(){
+$(`document`).ready(function () {
     gameView.hide();
-    startButton.click(function(){
+    startButton.click(function () {
         landingView.hide();
         gameView.show();
         triviaGame.startRound();
