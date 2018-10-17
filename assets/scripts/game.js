@@ -128,27 +128,32 @@ let triviaGame = {
                 `)
         } else if (gameResult === "time-over") {
             messageDisplay.html(`<h1>Time over</h1>`);
-            window.setTimeout(triviaGame.startRound,1000);
+            window.setTimeout(triviaGame.startRound, 1000);
         } else {
             messageDisplay.html(`<h1>Wrong!</h1>`);
         }
 
     },
 
-    startTimer: function(duration){
+    startTimer: function (duration) {
         let timer = duration;
         window.clearInterval(intervalId);
-        intervalId = window.setInterval(function(){
+        intervalId = window.setInterval(function () {
             console.log(`tick tick...`)
             timer--;
             timerDisplay.html(timer);
 
-            if(timer === 0){
+            if (timer === 0) {
                 window.clearInterval(intervalId);
-                timeoutId = window.setTimeout(triviaGame.displayMessage,1000,"time-over");
+                if (triviaGame.data.length === 0) {
+                    timeoutId = window.setTimeout(triviaGame.displayMessage, 1000, "game-over");
+                } else {
+                    timeoutId = window.setTimeout(triviaGame.displayMessage, 1000, "time-over");
+                }
+
             }
-        },1000)
-        
+        }, 1000)
+
     }
 
 }
