@@ -2,6 +2,9 @@ const questionDisplay = $(`#questionDisplay`);
 const answerDisplay = $(`#answerDisplay`);
 const messageDisplay = $(`#messageDisplay`);
 const timerDisplay = $(`#timeDisplay`);
+const landingView = $(`#landingView`);
+const gameView = $(`#gameView`);
+const startButton = $(`#startButton`);
 let numberCorrect = 0;
 let numberWrong = 0;
 let guessedQuestions = [];
@@ -125,7 +128,8 @@ let triviaGame = {
                 <p>Correct: ${numberCorrect}, Wrong: ${numberWrong}</p>
                 <p>Thanks for playing!</p>
                 <button class="btn btn-info">Reset</button>
-                `)
+                `);
+                $(`.btn-info`).click(triviaGame.startRound());
         } else if (gameResult === "time-over") {
             messageDisplay.html(`<h1>Time over</h1>`);
             window.setTimeout(triviaGame.startRound, 1000);
@@ -160,4 +164,15 @@ let triviaGame = {
 
 
 //initiate game by calling triviaGame object
-triviaGame.startRound();
+$(`document`).ready(function(){
+    gameView.hide();
+    startButton.click(function(){
+        landingView.hide();
+        gameView.show();
+        triviaGame.startRound();
+    });
+
+
+})
+
+//triviaGame.startRound();
