@@ -19,7 +19,7 @@ let triviaGame = {
     //test array with shorter length
     data: [{ "category": "Science & Nature", "type": "multiple", "difficulty": "easy", "question": "How many objects are equivalent to one mole?", "correct_answer": "6.022 x 10^23", "incorrect_answers": ["6.002 x 10^22", "6.022 x 10^22", "6.002 x 10^23"] }, { "category": "Science & Nature", "type": "multiple", "difficulty": "hard", "question": "How many legs is it biologically impossible for a centipede to have?", "correct_answer": "100", "incorrect_answers": ["26", "50", "74"] }],
 
-    timerDuration: 3,
+    timerDuration: 10,
 
     //Generates a random number with the length of the data array as a range
     makeRandom: function () {
@@ -75,7 +75,7 @@ let triviaGame = {
     },
 
     startRound: function () {
-
+        console.log(`round starting`);
         questionDisplay.show();
         answerDisplay.show();
         messageDisplay.hide();
@@ -123,10 +123,10 @@ let triviaGame = {
         answerDisplay.hide();
         messageDisplay.show();
         if (roundResult === "round-win") {
-            console.log(`round-win display message executed`)
+            console.log(`round-win display message executed`);
             messageDisplay.html(`<h1>Correct!</h1>`);
         } else if (roundResult === "game-over") {
-            console.log(`gameover display message executed`)
+            console.log(`gameover display message executed`);
             messageDisplay.html(
                 `
                 <h1>Game Over</h1>
@@ -135,9 +135,10 @@ let triviaGame = {
                 <p>Thanks for playing!</p>
                 <button class="btn btn-info">Reset</button>
                 `);
-            $(`.btn-info`).click(triviaGame.startRound());
+            $(`.btn-info`).click(triviaGame.startRound);
         } else if (roundResult === "time-over") {
             console.log(`time-over display message executed`);
+            //numberWrong++;
             messageDisplay.html(`<h1>Time over</h1>`);
             window.setTimeout(triviaGame.startRound, 1000);
         } else {
@@ -151,19 +152,24 @@ let triviaGame = {
         let timer = duration;
         window.clearInterval(intervalId);
         intervalId = window.setInterval(function () {
-            console.log(`tick tick...`)
+            console.log(`tick tick...time=${timer}`)
             timer--;
             timerDisplay.html(timer);
 
             if (timer === 0) {
+                console.log(`timer is now 0, clearing intervalId`)
+                numberWrong++;
                 window.clearInterval(intervalId);
                 if (triviaGame.data.length === 0) {
-                    timeoutId = window.setTimeout(triviaGame.displayMessage, 1000, "game-over");
+                    console.log(`time expired, running display message with game-over`)
+                    return timeoutId = window.setTimeout(triviaGame.displayMessage, 1000, "game-over");
                 } else {
-                    timeoutId = window.setTimeout(triviaGame.displayMessage, 1000, "time-over");
+                    console.log(`time expired, running display message with time-over`)
+                    return timeoutId = window.setTimeout(triviaGame.displayMessage, 1000, "time-over");
                 }
 
             }
+            console.log(`outside the if block`);
         }, 1000)
 
     }
