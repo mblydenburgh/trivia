@@ -92,8 +92,9 @@ let triviaGame = {
 
     checkAnswer: function (event) {
         console.log(`checking answer...`);
+        window.clearInterval(intervalId);
         if (event.target.hasAttribute(`correct`) === true) {
-            window.clearInterval(intervalId);
+            // window.clearInterval(intervalId);
             console.log(`number guessed right:${numberCorrect}`);
             if (triviaGame.data.length === 0) {
                 //player wins game
@@ -135,7 +136,12 @@ let triviaGame = {
                 <p>Thanks for playing!</p>
                 <button class="btn btn-info">Reset</button>
                 `);
-            $(`.btn-info`).click(triviaGame.startRound);
+            $(`.btn-info`).click(function () {
+                triviaGame.requestData();
+                //triviaGame.startRound();
+                window.setTimeout(triviaGame.startRound,1000); //find better solution to wait for ajax response than a manual timer
+            });
+
         } else if (roundResult === "time-over") {
             console.log(`time-over display message executed`);
             //numberWrong++;
@@ -177,10 +183,12 @@ let triviaGame = {
     requestData: function () {
         $.ajax({
             method: "GET",
-            url: `https://opentdb.com/api.php?amount=10&category=17&type=multiple`
-        }).then(function (response) {
+            url: `https://opentdb.com/api.php?amount=10&category=17&type=multiple`,
+        })
+        .done(function (response) {
             console.log(response);
             triviaGame.data = response.results;
+            triviaGame.startRound();
         });
     }
 
@@ -197,11 +205,11 @@ $(`document`).ready(function () {
     //     console.log(response);
     //     triviaGame.data = response.results;
     // });
-    triviaGame.requestData();
+    //triviaGame.requestData();
     startButton.click(function () {
         landingView.hide();
         gameView.show();
-        triviaGame.startRound();
+        triviaGame.requestData();
     });
 
 
