@@ -17,15 +17,22 @@
 
 <body>
     <div class="container text-center">
-        <h1>That Nerdy Trivia Game</h1>
+        <h1>That Trivia Game</h1>
 
         <div id="landingView">
-            <p>A timed trivia game to showcase jQuery and timers</p>
+            <p>A timed trivia game to showcase jQuery, timers, and API use</p>
             <button id="startButton">Start Game</button>
-            <select>
+            <br>
+            <span>Choose a difficulty: </span><select id="modeSelect">
                 <option value="easy">Easy (15 seconds)</option>
                 <option value="medium">Medium (10 seconds)</option>
                 <option value="hard">Hard (5 seconds)</option>
+            </select>
+            <br>
+            <span>Choose a category: </span> <select id="categorySelect">
+                <option value="21">Sports</option>
+                <option value="17">Science</option>
+                <option value="12">Music</option>
             </select>
         </div>
 

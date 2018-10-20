@@ -1,9 +1,10 @@
 body{
-    background: url(../images/background.jpg) no-repeat center center fixed;
+    /* background: url(../images/background.jpg) no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
-    background-size: cover;
+    background-size: cover; */
+    background: linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12) no-repeat center center fixed;
 }
 
 .container{
@@ -21,4 +22,20 @@ body{
 .slot:hover{
     background-color: rgba(99, 99, 99, 0.7);
     color: white;
+}
+
+#startButton{
+    border-radius: 20px;
+    background-color: #1d393b;
+    color: white;
+    margin-bottom: 1em;
+}
+
+#startButton:hover{
+    background-color: #35686b;
+}
+
+select{
+    background:none;
+    border: none;
 }

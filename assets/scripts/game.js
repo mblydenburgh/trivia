@@ -12,6 +12,7 @@ let timeoutId;
 let intervalId;
 let timerDuration;
 let mode;
+let category;
 
 let triviaGame = {
 
@@ -81,6 +82,7 @@ let triviaGame = {
 
     startRound: function () {
         console.log(`round starting`);
+        triviaGame.setBackground();
         questionDisplay.show();
         answerDisplay.show();
         messageDisplay.hide();
@@ -147,6 +149,8 @@ let triviaGame = {
                 <button class="btn btn-info">Reset</button>
                 `);
             $(`.btn-info`).click(function () {
+                numberCorrect = 0;
+                numberWrong = 0;
                 triviaGame.requestData();
                 console.log('in display - game over');
                 window.setTimeout(triviaGame.requestData, 1000); //find better solution to wait for ajax response than a manual timer
@@ -194,13 +198,30 @@ let triviaGame = {
     requestData: function () {
         $.ajax({
             method: "GET",
-            url: `https://opentdb.com/api.php?amount=10&category=17&type=multiple`,
+            url: `https://opentdb.com/api.php?amount=10&category=${category}&type=multiple`,
         })
             .done(function (response) {
                 console.log(response);
                 triviaGame.data = response.results;
                 triviaGame.startRound();
             });
+    },
+
+    setBackground: function () {
+        switch (category) {
+            case "21":
+                $(`body`).css("background", "url(assets/images/sports.jpg) no-repeat center center fixed");
+                break;
+            case "17":
+                $(`body`).css("background", "url(assets/images/science.jpg) no-repeat center center fixed");
+                break;
+            case "12":
+                $(`body`).css("background","url(assets/images/music.jpg) no-repeat center center fixed");
+                break;
+                default:
+                $(`body`).css("background","linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12) no-repeat center center fixed");
+                break;
+        }
     }
 
 }
@@ -209,9 +230,11 @@ let triviaGame = {
 //initiate game by calling triviaGame object
 $(`document`).ready(function () {
     gameView.hide();
-    
+
     startButton.click(function () {
-        mode = $(`select`).find(`:selected`).val();
+        mode = $(`#modeSelect`).find(`:selected`).val();
+        category = $(`#categorySelect`).find(`:selected`).val();
+        console.log(category);
         console.log(mode);
         landingView.hide();
         gameView.show();
