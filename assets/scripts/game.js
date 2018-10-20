@@ -209,8 +209,9 @@ let triviaGame = {
 //initiate game by calling triviaGame object
 $(`document`).ready(function () {
     gameView.hide();
-    mode = $(`select`).val();
+    
     startButton.click(function () {
+        mode = $(`select`).find(`:selected`).val();
         console.log(mode);
         landingView.hide();
         gameView.show();
