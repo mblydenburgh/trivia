@@ -10,16 +10,27 @@ let numberWrong = 0;
 let guessedQuestions = [];
 let timeoutId;
 let intervalId;
+let timerDuration;
+let mode;
 
-//taken from 
 let triviaGame = {
 
     data: [],
-    timerDuration: 10,
+    //timerDuration: 5,
+
+    setTimerDuration: function (mode) {
+        if (mode === "easy") {
+            timerDuration = 15;
+        } else if (mode === "medium") {
+            timerDuration = 10;
+        } else {
+            timerDuration = 5;
+        }
+    },
 
     //Generates a random number with the length of the data array as a range
     makeRandom: function () {
-        //console.log(randomNumbers);
+        console.log(`length of data array: ${this.data.length}`)
         let randomIndex = Math.floor(Math.random() * this.data.length);
         console.log(`randomIndex: ${randomIndex}`);
         return randomIndex;
@@ -41,15 +52,16 @@ let triviaGame = {
 
     serveQuestion: function () {
         let currentQuestion = this.makeQuestion();
-        console.log(`being served: ${currentQuestion.queston}`)
         questionDisplay.html(`<p>${currentQuestion.queston}</p>`);
         // make random number between 0 and 3, store in variable correctAnswerSlot
         let correctAnswerSlot = Math.floor(Math.random() * 4 + 1);
-        console.log(`placing correct answer in slot${correctAnswerSlot}`);
+
+        $(`#slot1`).removeAttr(`correct`);
+        $(`#slot2`).removeAttr(`correct`);
+        $(`#slot3`).removeAttr(`correct`);
+        $(`#slot4`).removeAttr(`correct`);
 
         // use correctAnswerSlow to place correct answer randomly
-        console.log(`correct: ${currentQuestion.answer}`);
-        console.log(`incorrect:${currentQuestion.wrong}`);
         $(`#slot${correctAnswerSlot}`).text(`${currentQuestion.answer}`);
         $(`#slot${correctAnswerSlot}`).attr(`correct`, true); // custom attribute used to scan for correct answer placement
 
@@ -58,13 +70,10 @@ let triviaGame = {
             for (let j = 1; j < 5; j++) { //inner loop for each answerSlot
                 if ($(`#slot${j}`).text() === "") {
                     //slot is blank, add wrong answer
-                    console.log(`slot${j} is blank`);
-                    console.log(`pushing ${currentQuestion.wrong[i]} into slot${j}`);
                     $(`#slot${j}`).text(`${currentQuestion.wrong[i]}`);
                     break;
                 } else {
                     //slot is not blank, skip
-                    console.log(`slot${j} is not blank`);
                 }
             }
         }
@@ -75,20 +84,29 @@ let triviaGame = {
         questionDisplay.show();
         answerDisplay.show();
         messageDisplay.hide();
-        timerDisplay.show().text(this.timerDuration);
+        console.log(`passing mode:${mode} into setTimeDuration`)
+        triviaGame.setTimerDuration(mode);
+        timerDisplay.show().text(timerDuration);
         $(`.slot`).text(``); //remove text so serveQuestion can place answers
         triviaGame.serveQuestion(); //retreive question + answers
-        triviaGame.startTimer(triviaGame.timerDuration);
-        $(`.slot`).click(function () {
-            triviaGame.checkAnswer(event);
-        })
+        triviaGame.startTimer(timerDuration);
+        // $(`.slot`).click(function () {
+        //     let responseValue = $(this).attr('correct');
+        //     event.preventDefault();
+        //     console.log(responseValue);
+        //     // triviaGame.checkAnswer(event);
+        //     triviaGame.checkAnswer(responseValue);
+        // })
 
     },
 
-    checkAnswer: function (event) {
+    // checkAnswer: function (event) {
+    checkAnswer: function (responseOverallValue) {
         console.log(`checking answer...`);
         window.clearInterval(intervalId); // stop question timer from clicking
-        if (event.target.hasAttribute(`correct`) === true) {
+        console.log("Event: " + event.target.hasAttribute('correct'));
+        // if (event.target.hasAttribute(`correct`) === true) {
+        if (responseOverallValue) {
             console.log(`number guessed right:${numberCorrect}`);
             if (triviaGame.data.length === 0) {
                 //player wins game
@@ -98,14 +116,17 @@ let triviaGame = {
                 //player wins round
                 numberCorrect++;
                 triviaGame.displayMessage("round-win");
+                console.log('in checkanswer - correct with more questions');
                 window.setTimeout(triviaGame.startRound, 3000);
             }
         } else {
             console.log(`wrong:`);
             numberWrong++
             triviaGame.displayMessage(false);
+            console.log('in checkanswer - wrong');
             window.setTimeout(triviaGame.startRound, 3000);
         }
+        console.log(`check answer finished`);
     },
 
     displayMessage: function (roundResult) {
@@ -127,13 +148,15 @@ let triviaGame = {
                 `);
             $(`.btn-info`).click(function () {
                 triviaGame.requestData();
-                window.setTimeout(triviaGame.startRound,1000); //find better solution to wait for ajax response than a manual timer
+                console.log('in display - game over');
+                window.setTimeout(triviaGame.requestData, 1000); //find better solution to wait for ajax response than a manual timer
             });
 
         } else if (roundResult === "time-over") {
             console.log(`time-over display message executed`);
             //numberWrong++;
             messageDisplay.html(`<h1>Time over</h1>`);
+            console.log('in display - time over');
             window.setTimeout(triviaGame.startRound, 1000);
         } else {
             console.log(`incorrect answer display message executed`);
@@ -173,11 +196,11 @@ let triviaGame = {
             method: "GET",
             url: `https://opentdb.com/api.php?amount=10&category=17&type=multiple`,
         })
-        .done(function (response) {
-            console.log(response);
-            triviaGame.data = response.results;
-            triviaGame.startRound();
-        });
+            .done(function (response) {
+                console.log(response);
+                triviaGame.data = response.results;
+                triviaGame.startRound();
+            });
     }
 
 }
@@ -186,11 +209,21 @@ let triviaGame = {
 //initiate game by calling triviaGame object
 $(`document`).ready(function () {
     gameView.hide();
+    mode = $(`select`).val();
     startButton.click(function () {
+        console.log(mode);
         landingView.hide();
         gameView.show();
         triviaGame.requestData();
     });
+
+    $(`.slot`).click(function () {
+        let responseValue = $(this).attr('correct');
+        event.preventDefault();
+        console.log(responseValue);
+        // triviaGame.checkAnswer(event);
+        triviaGame.checkAnswer(responseValue);
+    })
 
 
 })
