@@ -150,9 +150,11 @@ let triviaGame = {
             $(`.btn-info`).click(function () {
                 numberCorrect = 0;
                 numberWrong = 0;
-                triviaGame.requestData();
-                console.log('in display - game over');
-                window.setTimeout(triviaGame.requestData, 1000); //find better solution to wait for ajax response than a manual timer
+                gameView.hide();
+                landingView.show();
+                // triviaGame.requestData();
+                // console.log('in display - game over');
+                // window.setTimeout(triviaGame.requestData, 1000); //find better solution to wait for ajax response than a manual timer
             });
 
         } else if (roundResult === "time-over") {
