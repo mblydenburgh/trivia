@@ -92,13 +92,6 @@ let triviaGame = {
         $(`.slot`).text(``); //remove text so serveQuestion can place answers
         triviaGame.serveQuestion(); //retreive question + answers
         triviaGame.startTimer(timerDuration);
-        // $(`.slot`).click(function () {
-        //     let responseValue = $(this).attr('correct');
-        //     event.preventDefault();
-        //     console.log(responseValue);
-        //     // triviaGame.checkAnswer(event);
-        //     triviaGame.checkAnswer(responseValue);
-        // })
 
     },
 
