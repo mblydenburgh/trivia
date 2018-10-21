@@ -122,11 +122,17 @@ let triviaGame = {
                 window.setTimeout(triviaGame.startRound, 3000);
             }
         } else {
-            console.log(`wrong:`);
-            numberWrong++
-            triviaGame.displayMessage(false);
-            console.log('in checkanswer - wrong');
-            window.setTimeout(triviaGame.startRound, 3000);
+            if (triviaGame.data.length === 0) {
+                numberWrong++;
+                triviaGame.displayMessage("game-over");
+            } else {
+                console.log(`wrong:`);
+                numberWrong++
+                triviaGame.displayMessage(false);
+                console.log('in checkanswer - wrong');
+                window.setTimeout(triviaGame.startRound, 3000);
+            }
+
         }
         console.log(`check answer finished`);
     },
@@ -216,10 +222,10 @@ let triviaGame = {
                 $(`body`).css("background", "url(assets/images/science.jpg) no-repeat center center fixed");
                 break;
             case "12":
-                $(`body`).css("background","url(assets/images/music.jpg) no-repeat center center fixed");
+                $(`body`).css("background", "url(assets/images/music.jpg) no-repeat center center fixed");
                 break;
-                default:
-                $(`body`).css("background","linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12) no-repeat center center fixed");
+            default:
+                $(`body`).css("background", "linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12) no-repeat center center fixed");
                 break;
         }
     }
